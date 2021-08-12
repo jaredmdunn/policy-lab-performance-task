@@ -36,3 +36,23 @@ pop_boston_65_plus_one_mile_to_fenway = pop_by_block_boston.loc[
 
 # Question 4: What is the mean distance a resident of Boston who is
 # at least 65 years old lives from their nearest school?
+
+grouped_min = dist_school_to_block[["GEOID10", "distance"]].groupby("GEOID10").min()
+
+pop_by_block_boston_with_distance_to_school = pop_by_block_boston.merge(
+    grouped_min, on="GEOID10"
+)
+
+pop_by_block_boston_with_distance_to_school["distance_times_65_plus"] = (
+    pop_by_block_boston_with_distance_to_school["65_plus"]
+    * pop_by_block_boston_with_distance_to_school["distance"]
+)
+
+answer_4 = (
+    pop_by_block_boston_with_distance_to_school["distance_times_65_plus"].sum()
+    / pop_boston_65_plus
+)
+
+print(dist_school_to_block.describe())
+print(pop_by_block_boston_with_distance_to_school)
+print(answer_4)
